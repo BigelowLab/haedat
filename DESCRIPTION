@@ -1,0 +1,19 @@
+Package: haedat
+Type: Package
+Title: Simple access to downloading and reading HAEDAT data in R
+Version: 0.1.0
+Author: Ben Tupper <btupper@bigelow.org>
+Maintainer: Ben Tupper <btupper@bigelow.org>
+Description: Simple access to downloading and reading HAEDAT data in R to permit local storage of data and to make xyzt package friendly.
+URL: https://github.com/BigelowLab/haedat
+Imports:
+  utils,
+  rlang,
+  dplyr,
+  readr,
+  rappdirs,
+  finch,
+  sf
+License: MIT + file LICENSE
+Encoding: UTF-8
+RoxygenNote: 7.2.1

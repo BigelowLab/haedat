@@ -1,0 +1,107 @@
+---
+title: "HAEDAT in R"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Simple access to downloading and reading [HAEDAT](https://ipt.iobis.org/hab/resource?r=haedat) data in R
+
+### Requirements
+
++ [R v4.1+](https://www.r-project.org/)
+
+
++ [rlang](https://CRAN.R-project.org/package=rlang)
++ [dplyr](https://CRAN.R-project.org/package=dplyr)
++ [readr](https://CRAN.R-project.org/package=readr)
++ [rappdirs](https://CRAN.R-project.org/package=rappdirs)
++ [finch](https://CRAN.R-project.org/package=finch)
++ [sf](https://CRAN.R-project.org/package=sf)
+
+### Installation
+
+```{r install, eval = FALSE}
+remotes::install_github("BigelowLab/haedat")
+```
+
+### Initial Usage
+
+
+#### Establish a root data directory
+
+Please establish the storage directory with `haedat_root()`. You can store data where ever you would like, but we suggest that you accept the default and ignore of all of details and mayhem that ensue with custom installations.
+
+```{r root, eval = FALSE}
+haedat::haedat_root()
+```
+
+#### Fetch the data
+
+The following will fetch and store the haedat data in DWCA format (Darwin Core Archive).  You only need to do this occasionally as the data is updated online.
+```{r fetch,  eval = FALSE}
+headat::fetch_haedat()
+```
+
+
+#### Usage
+
+Read the data into a list or three elements: `events`, `occurrences` and `extendedmeasurementorfact`.  Each of the tables has an `id` which can be used for merging.
+
+```{r read}
+suppressPackageStartupMessages({
+  library(haedat)
+  library(dplyr)
+  library(sf)
+  library(maps)
+})
+
+x <- read_haedat()
+lapply(x, head)
+```
+
+
+### event
+
+Let's take a look at the spatial distribution.
+
+```{r plot}
+event <- x$event
+maps::map()
+plot(sf::st_geometry(event),
+     col = "orange",
+     add = TRUE)
+```
+
+What about the distribution through time?  Hmmm.  The `eventDate` variable is character which gives one that 'oh, dear' feeling.  Let's see about how long the strings are; if they are all the same it should be easy to convert to a usable Date or numeric class.
+
+```{r eventDate-length}
+lens <- nchar(event$eventDate)
+tlens <- table(lens)
+tlens
+```
+Oh, nuts!  What do some of the different lengths look like?
+
+```{r eventDate-explore}
+sapply(names(tlens),
+       function(len){
+         ix <- lens == as.numeric(len)
+         sprintf("len=%s: %s", as.character(len),
+                     paste(head(event$eventDate[ix]), collapse = ", "))
+       })
+```
+
+Groan.
+
+Maybe we just take the one with 4-digits in the first four positions, call that `eventYear` and drop what doesn't convert.
+
+```{r eventYear}
+event <- dplyr::mutate(event,
+                       eventYear = as.numeric(substring(eventDate, 1,4))) |>
+  dplyr::filter(!is.na(eventYear) & eventYear > 1990)
+hist(event$eventYear, main = "HAEDAT events since 1990",
+     xlab = 'Year',
+     breaks = seq(from = min(event$eventYear), to = max(event$eventYear)))
+```
