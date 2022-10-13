@@ -16,7 +16,7 @@ read_haedat_dwca <- function(what = c("event","occurrence", "extendedmeasurement
   what = match.arg(what, 
                    c("event","occurrence", "extendedmeasurementorfact"),
                    several.ok = TRUE)
-  x <- finch::dwca_read(filename[1], read = TRUE)
+  x <- suppressMessages(finch::dwca_read(filename[1], read = TRUE))
   r <- sapply(what,
          function(w, x = NULL){
            iw <- grep(w, names(x$data), fixed = TRUE)
