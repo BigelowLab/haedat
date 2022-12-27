@@ -50,18 +50,31 @@ haedat_path <- function(...,
 #' This is a wrapper around \code{\link[base]{list.files}}
 #' @export
 #' @param path char, the path to list
-#' @param ... arguments passed to \code{\link[base]{list.files}}
 #' @return character vector
-list_haedat <- function(path = haedat_path(), ...){
-  list.files(path, ...)
+list_haedat <- function(source = c("obis", "iode"), 
+                        path = haedat_path(), ...){
+  switch(source[1],
+         "obis" = list_obis(path = path),
+         "iode" = list_iode(path = path),
+         c(list_obis(path = path), list_iode(path = path))) # all
 }
 
-#' List DWCA resources, in order of most recent to oldest
+#' List IODE CSV resources, in order of most recent to oldest
 #' 
 #' @export
 #' @param path char, the path to list
 #' @return character vector of full filenames ordered by verion
-list_dwca <- function(path = haedat_path()){
-  list_haedat(path, pattern = "^dwca-haedat-.*\\.zip$", full.names = TRUE) |>
+list_iode <- function(path = haedat_path()){
+  list.files(path, pattern = "^.*haedat_search\\.csv$", full.names = TRUE) |>
+    sort(decreasing = TRUE)
+}
+
+#' List OBIS DWCA resources, in order of most recent to oldest
+#' 
+#' @export
+#' @param path char, the path to list
+#' @return character vector of full filenames ordered by verion
+list_obis <- function(path = haedat_path()){
+  list.files(path, pattern = "^dwca-haedat-.*\\.zip$", full.names = TRUE) |>
     sort(decreasing = TRUE)
 }

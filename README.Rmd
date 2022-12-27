@@ -34,23 +34,47 @@ remotes::install_github("BigelowLab/haedat")
 
 Please establish the storage directory with `haedat_root()`. You can store data where ever you would like, but we suggest that you accept the default and ignore of all of details and mayhem that ensue with custom installations.
 
-```{r root, eval = FALSE}
+```{r root}
+library(haedat)
 haedat::haedat_root()
 ```
 
 #### Fetch the data
 
-The following will fetch and store the haedat data in DWCA format (Darwin Core Archive).  You only need to do this occasionally as the data is updated online.
-```{r fetch,  eval = FALSE}
-headat::fetch_haedat()
+The following will fetch and store the haedat data in DWCA format (Darwin Core Archive) from [OBIS](https://ipt.iobis.org/hab/resource?r=haedat).  You only need to do this occasionally as the data is updated online.
+```{r fetch_obis,  eval = FALSE}
+fetch_haedat(where = "obis")
 ```
 
+You can also download the data as a single CSV from [IODE](http://haedat.iode.org/advancedSearch.php).  Like the DWCA, you only need to 
+refresh this occasionally.
 
-#### Usage
+```{r fetch_iode,  eval = FALSE}
+fetch_haedat(where = "iode")
+```
 
-Read the data into a list or three elements: `events`, `occurrences` and `extendedmeasurementorfact`.  Each of the tables has an `id` which can be used for merging.
+### List your data
 
-```{r read}
+Listings of locally stored data are returned in reverse sort order (since the files
+are version named).
+
+```{r listing}
+
+list_haedat(source = "obis")
+
+list_haedat(source = "iode")
+
+list_haedat(source = "all")
+```
+
+### Usage
+
+
+### OBIS data as DWCA
+
+Read the OBIS data into a list or three elements: `events`, `occurrences` and `extendedmeasurementorfact`.  Each of the tables has an `id` which can be used for merging.
+
+```{r read_obis}
 suppressPackageStartupMessages({
   library(haedat)
   library(dplyr)
@@ -58,17 +82,16 @@ suppressPackageStartupMessages({
   library(maps)
 })
 
-x <- read_haedat()
-lapply(x, head)
+obis <- read_haedat(source = "obis")
+lapply(obis, head)
 ```
-
 
 ### event
 
 Let's take a look at the spatial distribution.
 
-```{r plot}
-event <- x$event
+```{r plot_obis}
+event <- obis$event
 maps::map()
 plot(sf::st_geometry(event),
      col = "orange",
@@ -97,11 +120,36 @@ Groan.
 
 Maybe we just take the one with 4-digits in the first four positions, call that `eventYear` and drop what doesn't convert.
 
-```{r eventYear}
+```{r eventYear_obis}
 event <- dplyr::mutate(event,
                        eventYear = as.numeric(substring(eventDate, 1,4))) |>
   dplyr::filter(!is.na(eventYear) & eventYear > 1990)
-hist(event$eventYear, main = "HAEDAT events since 1990",
+hist(event$eventYear, main = "OBIS HAEDAT events since 1990",
      xlab = 'Year',
      breaks = seq(from = min(event$eventYear), to = max(event$eventYear)))
+```
+
+
+### IODE data as CSV
+
+```{r read_iode}
+iode <- read_haedat(source = "iode")
+glimpse(iode)
+```
+
+
+```{r plot_iode}
+maps::map()
+plot(sf::st_geometry(iode),
+     col = "orange",
+     add = TRUE)
+```
+
+```{r eventYear_iode}
+
+hist(dplyr::filter(iode, !is.na(eventYear) & eventYear > 1990) |>
+       dplyr::pull(eventYear), 
+     main = "IODE HAEDAT events since 1990",
+     xlab = 'Year',
+     breaks = seq(from = 1990, to = max(iode$eventYear)))
 ```

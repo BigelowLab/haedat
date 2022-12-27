@@ -4,12 +4,10 @@
 \alias{list_haedat}
 \title{List files/directories in the haedat root directory}
 \usage{
-list_haedat(path = haedat_path(), ...)
+list_haedat(source = c("obis", "iode"), path = haedat_path(), ...)
 }
 \arguments{
 \item{path}{char, the path to list}
-
-\item{...}{arguments passed to \code{\link[base]{list.files}}}
 }
 \value{
 character vector

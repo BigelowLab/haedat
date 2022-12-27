@@ -2,24 +2,18 @@
 % Please edit documentation in R/fetch.R
 \name{fetch_haedat}
 \alias{fetch_haedat}
-\title{Fetch HAEDAT data using the specified URL}
+\title{Fetch HAEDAT data as DWCA from iOBIS or CSV from HADAET directly}
 \usage{
-fetch_haedat(
-  x = "https://ipt.iobis.org/hab/archive.do?r=haedat&v=3.2",
-  save_file = haedat_path("dwca-haedat-v3.2.zip"),
-  ...
-)
+fetch_haedat(where = c("obis", "iode")[1], ...)
 }
 \arguments{
-\item{x}{character, URL defining resource to download}
+\item{where}{char, one of 'obis' or 'haedat'}
 
-\item{save_file}{character, the filename to download to}
-
-\item{...}{other arguments for \code{\link[utils]{download.file}}}
+\item{...}{other arguments}
 }
 \value{
-the output of \code{\link[utils]{download.file}}
+0 for success, not-0 for failure
 }
 \description{
-Fetch HAEDAT data using the specified URL
+Fetch HAEDAT data as DWCA from iOBIS or CSV from HADAET directly
 }

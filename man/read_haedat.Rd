@@ -2,18 +2,18 @@
 % Please edit documentation in R/io.R
 \name{read_haedat}
 \alias{read_haedat}
-\title{Read haedat data in original or DWCA form}
+\title{Read haedat data from IODE or OBIS}
 \usage{
-read_haedat(source = c("dwca", "original"), ...)
+read_haedat(source = c("obis", "iode"), ...)
 }
 \arguments{
-\item{source}{character, one of 'orginal' or 'dwca'}
+\item{source}{character, one of 'iode' or 'obis'}
 
-\item{...}{other arguments passed to \code{\link{read_haedat_original}} or \code{\link{read_haedat_dwca}}}
+\item{...}{other arguments passed to \code{\link{read_haedat_iode}} or \code{\link{read_haedat_obis}}}
 }
 \value{
-see \code{\link{read_haedat_original}} or \code{\link{read_haedat_dwca}}
+see \code{\link{read_haedat_iode}} or \code{\link{read_haedat_obis}}
 }
 \description{
-Read haedat data in original or DWCA form
+Read haedat data from IODE or OBIS
 }
