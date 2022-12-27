@@ -350,3 +350,19 @@ hist(dplyr::filter(iode, !is.na(eventYear) & eventYear > 1990) |>
 ```
 
 ![](README_files/figure-gfm/eventYear_iode-1.png)<!-- -->
+
+### Comparing
+
+``` r
+obis <- read_haedat(source = "obis", form = "tibble")
+iode <- read_haedat(source = "iode", form = "tibble")
+dim(obis$event)
+```
+
+    ## [1] 13378    12
+
+``` r
+dim(iode)
+```
+
+    ## [1] 10000    84

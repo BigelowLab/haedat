@@ -153,3 +153,13 @@ hist(dplyr::filter(iode, !is.na(eventYear) & eventYear > 1990) |>
      xlab = 'Year',
      breaks = seq(from = 1990, to = max(iode$eventYear)))
 ```
+
+
+### Comparing
+
+```{r}
+obis <- read_haedat(source = "obis", form = "tibble")
+iode <- read_haedat(source = "iode", form = "tibble")
+dim(obis$event)
+dim(iode)
+```
