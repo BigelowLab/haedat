@@ -4,10 +4,17 @@
 \alias{read_haedat_iode}
 \title{Read IODE haedat data in CSV form}
 \usage{
-read_haedat_iode(filename = list_iode()[1], form = c("tibble", "sf")[2])
+read_haedat_iode(
+  filename = list_iode()[1],
+  purge_multibyte = TRUE,
+  form = c("tibble", "sf")[2]
+)
 }
 \arguments{
 \item{filename}{character, the name of the file to read}
+
+\item{purge_multibyte}{logical, if TRUE attempt to remove multibyte charcaters before
+reading into a table (sf or tibble)}
 
 \item{form}{charcater, one of 'tibble' or 'sf' specify the output class type}
 }

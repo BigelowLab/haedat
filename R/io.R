@@ -44,10 +44,22 @@ read_haedat_obis <- function(what = c("event","occurrence", "extendedmeasurement
 #' @seealso \href{http://haedat.iode.org/eventSearch.php?listAll=1&sortby=name}{HAEDAT IODE}
 #' @export
 #' @param filename character, the name of the file to read
+#' @param purge_multibyte logical, if TRUE attempt to remove multibyte charcaters before
+#'   reading into a table (sf or tibble)
 #' @param form charcater, one of 'tibble' or 'sf' specify the output class type
 #' @return a tibble or sf object
 read_haedat_iode <- function(filename = list_iode()[1],
+                             purge_multibyte = TRUE,
                         form = c("tibble", "sf")[2]){
+  
+  if (purge_multibyte[1]){
+    tmpfile = tempfile(fileext = ".csv")
+    x <- readLines(filename) |>
+      iconv(to = 'UTF-8', sub = "") |>
+      readr::write_lines(tmpfile)
+    filename <- tmpfile
+  }
+  
   
   x <- suppressWarnings(readr::read_csv(filename[1], 
                        guess_max = 3000,
