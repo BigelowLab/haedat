@@ -65,7 +65,7 @@ list_haedat <- function(source = c("obis", "iode"),
 #' @param path char, the path to list
 #' @return character vector of full filenames ordered by verion
 list_iode <- function(path = haedat_path()){
-  list.files(path, pattern = "^.*haedat_search\\.csv$", full.names = TRUE) |>
+  list.files(path, pattern = "^.*haedat_search.*\\.csv$", full.names = TRUE) |>
     sort(decreasing = TRUE)
 }
 
